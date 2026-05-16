@@ -40,9 +40,21 @@
             text-shadow: 0px 4px 15px rgba(0, 0, 0, 0.8);
         }
 
+        /* Estilos para el mensaje especial */
+        #special-message {
+            display: none; /* Oculto al inicio */
+            color: #ffffff;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 20px; /* Espacio de separación con la foto de abajo */
+            text-shadow: 0px 4px 12px rgba(0, 0, 0, 0.9), 0px 0px 25px rgba(0, 0, 0, 0.7);
+            letter-spacing: 1px;
+            animation: fadeIn 1.5s ease-in-out forwards;
+        }
+
         /* Estilos para la imagen final superpuesta */
         #final-image {
-            display: none;
+            display: none; /* Oculto al inicio */
             max-width: 450px;
             width: 90%;
             height: auto;
@@ -52,11 +64,11 @@
             animation: fadeIn 1.5s ease-in-out forwards;
         }
 
-        /* Animación para la aparición de la captura de pantalla */
+        /* Animación para la aparición suave de los elementos */
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: scale(0.9);
+                transform: scale(0.95);
             }
             to {
                 opacity: 1;
@@ -71,6 +83,9 @@
         <!-- Cronómetro en el centro -->
         <div id="countdown">00:00:00</div>
         
+        <!-- Texto resaltado oculto al inicio -->
+        <div id="special-message">Ponte hermosa mi amor</div>
+
         <!-- Imagen superpuesta oculta al inicio -->
         <img id="final-image" src="Captura de pantalla 2026-05-16 012618.png" alt="Captura Final">
     </div>
@@ -81,15 +96,14 @@
 
         /* 
            ⚠️ MODO DE PRUEBA RÁPIDA ACTIVO:
-           He corregido el error quitando el 'const' repetido. Ahora el temporizador 
-           terminará exactamente 5 segundos después de que cargues la página para que veas el efecto.
-           
+           El temporizador terminará 5 segundos después de cargar la página para que veas el resultado.
            CUANDO QUIERAS VOLVER AL TIEMPO REAL: Solo ponle // al inicio de las siguientes dos líneas.
         */
         const nowTest = new Date().getTime();
         targetDate = nowTest + 5000; 
 
         const countdownElement = document.getElementById('countdown');
+        const messageElement = document.getElementById('special-message');
         const finalImageElement = document.getElementById('final-image');
         const bodyElement = document.body;
 
@@ -119,15 +133,21 @@
         }
 
         function triggerFinalEffect() {
+            // Ocultar el cronómetro
             countdownElement.style.display = 'none';
+            
+            // Cambiar el fondo a la imagen del restaurante
             bodyElement.style.backgroundImage = "url('MG_1544-Museo-Larco-Cafe-Restaurant.jpg')";
+            
+            // Mostrar el texto y la imagen de la captura en orden vertical correcto
+            messageElement.style.display = 'block';
             finalImageElement.style.display = 'block';
         }
 
         // Intervalo de refresco cada 1 segundo
         const timerInterval = setInterval(updateLiveCountdown, 1000);
         
-        // Ejecución inmediata inicial para evitar saltos visuales
+        // Ejecución inmediata inicial
         updateLiveCountdown();
     </script>
 </body>
