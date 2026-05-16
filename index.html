@@ -69,7 +69,7 @@
 
     <div class="container">
         <!-- Cronómetro en el centro -->
-        <div id="countdown">Cargando...</div>
+        <div id="countdown">00:00:00</div>
         
         <!-- Imagen superpuesta oculta al inicio -->
         <img id="final-image" src="Captura de pantalla 2026-05-16 012618.png" alt="Captura Final">
@@ -77,16 +77,17 @@
 
     <script>
         // CONFIGURACIÓN DE FECHA OBJETIVO: Domingo 17 de Mayo de 2026 a las 20:00:00 (8:00 PM)
-        // Recordatorio: En JavaScript los meses se indexan desde 0 (0 = Enero, 4 = Mayo).
-        const targetDate = new Date(2026, 4, 17, 20, 0, 0).getTime();
+        let targetDate = new Date(2026, 4, 17, 20, 0, 0).getTime();
 
         /* 
-           ⚠️ MODO DE PRUEBA RÁPIDA:
-           Si deseas verificar cómo se ve el cambio de fondo y la aparición de la imagen 
-           sin esperar al domingo, descomenta las dos líneas de abajo quitando los caracteres "//".
+           ⚠️ MODO DE PRUEBA RÁPIDA ACTIVO:
+           He corregido el error quitando el 'const' repetido. Ahora el temporizador 
+           terminará exactamente 5 segundos después de que cargues la página para que veas el efecto.
+           
+           CUANDO QUIERAS VOLVER AL TIEMPO REAL: Solo ponle // al inicio de las siguientes dos líneas.
         */
-         const nowTest = new Date().getTime();
-         const targetDate = nowTest + 5000; 
+        const nowTest = new Date().getTime();
+        targetDate = nowTest + 5000; 
 
         const countdownElement = document.getElementById('countdown');
         const finalImageElement = document.getElementById('final-image');
