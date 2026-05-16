@@ -84,23 +84,23 @@
         <div id="countdown">00:00:00</div>
         
         <!-- Texto resaltado oculto al inicio -->
-        <div id="special-message">SORPRESA, HERMOSA</div>
+        <div id="special-message">Ponte hermosa mi amor</div>
 
         <!-- Imagen superpuesta oculta al inicio -->
         <img id="final-image" src="Captura de pantalla 2026-05-16 012618.png" alt="Captura Final">
     </div>
 
     <script>
-        // CONFIGURACIÓN DE FECHA OBJETIVO: Domingo 17 de Mayo de 2026 a las 20:00:00 (8:00 PM)
+        // CONFIGURACIÓN DE FECHA OBJETIVO REAL: Domingo 17 de Mayo de 2026 a las 20:00:00 (8:00 PM)
+        // Nota: En JavaScript los meses se indexan desde 0 (4 = Mayo).
         let targetDate = new Date(2026, 4, 17, 20, 0, 0).getTime();
 
         /* 
-           ⚠️ MODO DE PRUEBA RÁPIDA ACTIVO:
-           El temporizador terminará 5 segundos después de cargar la página para que veas el resultado.
-           CUANDO QUIERAS VOLVER AL TIEMPO REAL: Solo ponle // al inicio de las siguientes dos líneas.
+           ⚠️ MODO DE PRUEBA DESACTIVADO 
+           (Si alguna vez quieres volver a probar el efecto de 5 segundos, quita las '//' de las siguientes dos líneas).
         */
-        const nowTest = new Date().getTime();
-        targetDate = nowTest + 5000; 
+        // const nowTest = new Date().getTime();
+        // targetDate = nowTest + 5000; 
 
         const countdownElement = document.getElementById('countdown');
         const messageElement = document.getElementById('special-message');
@@ -139,7 +139,7 @@
             // Cambiar el fondo a la imagen del restaurante
             bodyElement.style.backgroundImage = "url('MG_1544-Museo-Larco-Cafe-Restaurant.jpg')";
             
-            // Mostrar el texto y la imagen de la captura en orden vertical correcto
+            // Mostrar el texto y la imagen de la captura de pantalla
             messageElement.style.display = 'block';
             finalImageElement.style.display = 'block';
         }
