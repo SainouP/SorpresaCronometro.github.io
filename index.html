@@ -29,6 +29,7 @@
             z-index: 10;
             width: 100%;
             padding: 20px;
+            box-sizing: border-box;
         }
 
         /* Estilos del cronómetro en el centro */
@@ -40,16 +41,41 @@
             text-shadow: 0px 4px 15px rgba(0, 0, 0, 0.8);
         }
 
-        /* Estilos para el mensaje especial */
-        #special-message {
+        /* Contenedor interactivo para la secuencia de mensajes */
+        #sequence-container {
             display: none; /* Oculto al inicio */
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Estilos para los textos de la secuencia y el mensaje final */
+        .interactive-text {
             color: #ffffff;
             font-size: 2.5rem;
             font-weight: 600;
-            margin-bottom: 20px; /* Espacio de separación con la foto de abajo */
-            text-shadow: 0px 4px 12px rgba(0, 0, 0, 0.9), 0px 0px 25px rgba(0, 0, 0, 0.7);
+            margin-bottom: 30px;
+            text-shadow: 0px 4px 12px rgba(0, 0, 0, 0.9), 0px 0px 25px rgba(0, 0, 0, 0.5);
             letter-spacing: 1px;
-            animation: fadeIn 1.5s ease-in-out forwards;
+            animation: fadeIn 0.6s ease-in-out forwards;
+        }
+
+        /* Estilos para los botones de la secuencia */
+        .action-btn {
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 12px 35px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0px 5px 15px rgba(255, 255, 255, 0.3);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+            background-color: #e6e6e6;
         }
 
         /* Estilos para la imagen final superpuesta */
@@ -83,8 +109,11 @@
         <!-- Cronómetro en el centro -->
         <div id="countdown">00:00:00</div>
         
-        <!-- Texto resaltado oculto al inicio -->
-        <div id="special-message">Ponte hermosa mi amor</div>
+        <!-- Contenedor dinámico de la secuencia de preguntas -->
+        <div id="sequence-container">
+            <div id="sequence-text" class="interactive-text"></div>
+            <button id="sequence-btn" class="action-btn" onclick="nextStep()"></button>
+        </div>
 
         <!-- Imagen superpuesta oculta al inicio -->
         <img id="final-image" src="Captura de pantalla 2026-05-16 012618.png" alt="Captura Final">
@@ -92,18 +121,32 @@
 
     <script>
         // CONFIGURACIÓN DE FECHA OBJETIVO REAL: Domingo 17 de Mayo de 2026 a las 20:00:00 (8:00 PM)
-        // Nota: En JavaScript los meses se indexan desde 0 (4 = Mayo).
         let targetDate = new Date(2026, 4, 17, 20, 0, 0).getTime();
 
         /* 
-           ⚠️ MODO DE PRUEBA DESACTIVADO 
-           (Si alguna vez quieres volver a probar el efecto de 5 segundos, quita las '//' de las siguientes dos líneas).
+           ⚠️ MODO DE PRUEBA ACTIVO:
+           El temporizador terminará 5 segundos después de cargar la página para que pruebes la secuencia.
+           CUANDO QUIERAS VOLVER AL TIEMPO REAL: Solo ponle // al inicio de las siguientes dos líneas.
         */
-        // const nowTest = new Date().getTime();
-        // targetDate = nowTest + 5000; 
+        const nowTest = new Date().getTime();
+        targetDate = nowTest + 5000; 
+
+        // Arreglo con la secuencia exacta de textos y el tipo de botón
+        const steps = [
+            { text: "¿Estas seguras que quieres saber?", btnText: "Siguiente" },
+            { text: "y... ¿si mejor esperamos un poco más?", btnText: "Siguiente" },
+            { text: "ya no le des al botón", btnText: "Siguiente" },
+            { text: "AMOR te dije que ya no le des al botón", btnText: "Siguiente" },
+            { text: "jajaja TE AMO DEMASIADO", btnText: "Siguiente" },
+            { text: "DALE AL BOTON FINALIZAR", btnText: "Finalizar" }
+        ];
+
+        let currentStep = 0;
 
         const countdownElement = document.getElementById('countdown');
-        const messageElement = document.getElementById('special-message');
+        const sequenceContainer = document.getElementById('sequence-container');
+        const sequenceText = document.getElementById('sequence-text');
+        const sequenceBtn = document.getElementById('sequence-btn');
         const finalImageElement = document.getElementById('final-image');
         const bodyElement = document.body;
 
@@ -111,36 +154,62 @@
             const now = new Date().getTime();
             const difference = targetDate - now;
 
-            // Cuando llega a cero o el tiempo ya pasó
             if (difference <= 0) {
                 clearInterval(timerInterval);
-                triggerFinalEffect();
+                startSequence();
                 return;
             }
 
-            // Conversión matemática a Horas, Minutos y Segundos exactos
             let hours = Math.floor(difference / (1000 * 60 * 60));
             let minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
             let seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-            // Formato de dos dígitos estables (00:00:00)
             hours = hours < 10 ? '0' + hours : hours;
             minutes = minutes < 10 ? '0' + minutes : minutes;
             seconds = seconds < 10 ? '0' + seconds : seconds;
 
-            // Actualizar el texto en pantalla
             countdownElement.textContent = `${hours}:${minutes}:${seconds}`;
         }
 
-        function triggerFinalEffect() {
-            // Ocultar el cronómetro
+        // Paso 1: Esconde el cronómetro e inicia la secuencia interactiva
+        function startSequence() {
             countdownElement.style.display = 'none';
+            sequenceContainer.style.display = 'block';
+            showStep();
+        }
+
+        // Muestra el texto y botón del paso actual de la secuencia
+        function showStep() {
+            // Reiniciar animación para que haga el efecto de transición por cada clic
+            sequenceText.style.animation = 'none';
+            sequenceText.offsetHeight; /* truco para resetear animación de CSS */
+            sequenceText.style.animation = null;
+
+            sequenceText.textContent = steps[currentStep].text;
+            sequenceBtn.textContent = steps[currentStep].btnText;
+        }
+
+        // Controla los clics en los botones de la secuencia
+        function nextStep() {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                showStep();
+            } else {
+                // Al darle clic al último botón ("Finalizar")
+                showFinalSurprise();
+            }
+        }
+
+        // Paso Final: Cambia el fondo a la imagen del restaurante y muestra la captura con el "Sorpresa, hermosa"
+        function showFinalSurprise() {
+            // Cambiar el texto de la secuencia por el mensaje final y remover el botón
+            sequenceBtn.style.display = 'none';
+            sequenceText.textContent = "Sorpresa, hermosa";
             
-            // Cambiar el fondo a la imagen del restaurante
+            // Cambiar el fondo del body a la imagen del Museo Larco
             bodyElement.style.backgroundImage = "url('MG_1544-Museo-Larco-Cafe-Restaurant.jpg')";
             
-            // Mostrar el texto y la imagen de la captura de pantalla
-            messageElement.style.display = 'block';
+            // Mostrar la captura de pantalla optimizada en tamaño justo debajo del texto
             finalImageElement.style.display = 'block';
         }
 
